@@ -89,6 +89,7 @@ class Album extends Component {
    }
 
    formatTime(timeInSeconds){
+   	console.log(timeInSeconds);
    	if(typeof(timeInSeconds) === "number"){
    		const minutes = Math.floor(timeInSeconds / 60);
    		const seconds = Math.floor(timeInSeconds - minutes * 60);
@@ -139,12 +140,13 @@ class Album extends Component {
          <PlayerBar
            isPlaying={this.state.isPlaying}
            currentSong={this.state.currentSong}
-           currentTime={() => this.formatTime(this.state.currentTime)}
-           duration={() => this.formatTime(this.state.duration)}
+           currentTime={() => this.state.currentTime}
+           duration={() => this.state.duration}
            handleSongClick={() => this.handleSongClick(this.state.currentSong)}
            handlePrevClick={() => this.handlePrevClick()}
            handleNextClick={() => this.handleNextClick()}
            handleTimeChange={(e) => this.handleTimeChange(e)}
+           formatTime = {() => this.formatTime()}
          />
        </section>
      );
