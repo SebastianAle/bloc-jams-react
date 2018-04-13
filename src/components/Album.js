@@ -16,7 +16,8 @@ class Album extends Component {
       	currentTime: 0,
       	duration: album.songs[0].duration,
       	isPlaying: false,
-      	volume: 1
+      	volume: 1,
+      	innerText: 1
      };
 
      this.audioElement = document.createElement('audio');
@@ -109,6 +110,37 @@ class Album extends Component {
    	this.setState({ volume:this.audioElement.volume });
    }
 
+   // ------------------ Assignment 10 -------------------------------
+
+   handleOnMouseOver(e){ // Call from line 167 ```````````````````````
+   	const isPlaying = this.state.isPlaying;
+   	let currentTarget = e.target.innerHTML;
+
+   	if(!isPlaying){
+   		this.setState({ innerText:currentTarget });
+   		e.target.className = "ion-play";
+   		e.target.innerHTML = "";
+
+   	} else if(isPlaying && currentTarget === ""){
+   		e.target.className = "ion-pause";
+   	}
+   }
+// I need to check for current song!!!
+
+   handleOnMouseLeave(e){ // Called from line 168 ````````````````````
+   	const isPlaying = this.state.isPlaying;
+
+   	if(!isPlaying){
+   		e.target.className = "song-number";
+   		e.target.innerHTML = this.state.innerText;
+
+   	} else if(isPlaying && e.target.innerHTML === ""){
+   		e.target.className = "ion-pause";
+   	}
+   }
+
+   // ------------------ Assignment 10 -------------------------------
+
    render() {
      return (
        <section className="album">
@@ -131,9 +163,11 @@ class Album extends Component {
                <tr className="song" key={index} onClick={ () => this.handleSongClick(song) } >
                  <td className="song-actions">
                    <button>
-                     <span className="song-number">{index+1}</span>
-                     <span className="ion-play"></span>
-                     <span className="ion-pause"></span>
+                     <span 
+                     onMouseEnter={(e) => this.handleOnMouseOver(e)} 
+                     onMouseLeave={(e) => this.handleOnMouseLeave(e)}
+                     className="song-number">{index + 1}
+                     </span>
                    </button>
                  </td>
                  <td className="song-title">{song.title}</td>
