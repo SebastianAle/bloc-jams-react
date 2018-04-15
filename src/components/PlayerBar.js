@@ -3,7 +3,7 @@ import React, { Component } from 'react';
  class PlayerBar extends Component {
    render() {
      return (
-       <section className="player-bar">
+       <section className="player-bar" align="right">
          <section id="buttons">
            <button id="previous" onClick={this.props.handlePrevClick}>
              <span className="ion-skip-backward"></span>

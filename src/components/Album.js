@@ -12,12 +12,12 @@ class Album extends Component {
  
      this.state = {
        	album: album,
-      	currentSong: album.songs[0],
+      	currentSong: album.songs[-1],
       	currentTime: 0,
       	duration: album.songs[0].duration,
       	isPlaying: false,
       	volume: 1,
-      	innerText: 1
+      	mouseOverSong: ""
      };
 
      this.audioElement = document.createElement('audio');
@@ -112,30 +112,36 @@ class Album extends Component {
 
    // ------------------ Assignment 10 -------------------------------
 
-   handleOnMouseOver(e){ // Call from line 167 ```````````````````````
-   	const isPlaying = this.state.isPlaying;
-   	let currentTarget = e.target.innerHTML;
-
-   	if(!isPlaying){
-   		this.setState({ innerText:currentTarget });
-   		e.target.className = "ion-play";
-   		e.target.innerHTML = "";
-
-   	} else if(isPlaying && currentTarget === ""){
-   		e.target.className = "ion-pause";
-   	}
+   handleOnMouseOver(e){
+   	const currentMouseOverSong = this.state.album.songs[e.target.innerHTML-1];
+   	console.log(currentMouseOverSong);
+   	this.setState({ mouseOverSong:currentMouseOverSong });
    }
-// I need to check for current song!!!
 
-   handleOnMouseLeave(e){ // Called from line 168 ````````````````````
-   	const isPlaying = this.state.isPlaying;
+   handleOnMouseLeave(e){ 
+   	this.setState({ mouseOverSong:"" });
+   }
 
-   	if(!isPlaying){
-   		e.target.className = "song-number";
-   		e.target.innerHTML = this.state.innerText;
-
-   	} else if(isPlaying && e.target.innerHTML === ""){
-   		e.target.className = "ion-pause";
+   handleSongClass(song){
+   	if(this.state.currentSong===song && 
+   		((this.state.isPlaying===false && this.state.mouseOverSong===song) ||
+   		(this.state.isPlaying && this.state.mouseOverSong!==song))){
+   		console.log("statement 1 executed");
+   		return "ion-pause";
+   	}
+   	else if(this.state.currentSong===song &&
+   		((this.state.isPlaying===false && this.state.mouseOverSong!==song) ||
+   		(this.state.isPlaying && this.state.mouseOverSong===song))){
+   		console.log("statement 2 executed");
+   		return "ion-play";
+   	}
+   	else if(this.state.mouseOverSong===song){
+   		console.log("statement 3 executed");
+   		return "ion-play";
+   	}
+   	else {
+   		console.log("statement 4 executed");
+   		return null;
    	}
    }
 
@@ -152,7 +158,7 @@ class Album extends Component {
              <div id="release-info">{this.state.album.year} {this.state.album.label}</div>
            </div>
          </section>
-         <table id="song-list">
+         <table id="song-list" align="center">
            <colgroup>
              <col id="song-number-column" />
              <col id="song-title-column" />
@@ -164,9 +170,14 @@ class Album extends Component {
                  <td className="song-actions">
                    <button>
                      <span 
-                     onMouseEnter={(e) => this.handleOnMouseOver(e)} 
+                     onMouseOver={(e) => this.handleOnMouseOver(e)} 
                      onMouseLeave={(e) => this.handleOnMouseLeave(e)}
-                     className="song-number">{index + 1}
+                     className={this.handleSongClass(song)}>
+                     	{this.state.mouseOverSong===song ? 
+                     		null :
+                     		this.state.currentSong!==song ?
+                     			this.state.album.songs.indexOf(song) + 1 :
+                     			null}
                      </span>
                    </button>
                  </td>
